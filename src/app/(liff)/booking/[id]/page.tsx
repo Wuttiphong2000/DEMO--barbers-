@@ -32,6 +32,8 @@ export default function BookingStatusPage() {
   const [booking, setBooking] = useState<BookingDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+  const [confirmCancel, setConfirmCancel] = useState(false)
 
   useEffect(() => {
     fetch(`/api/bookings/${id}`)
@@ -61,6 +63,17 @@ export default function BookingStatusPage() {
         <p className="text-gray-500">ไม่พบการจองนี้</p>
       </div>
     )
+  }
+
+  async function handleCancel() {
+    setCancelling(true)
+    const res = await fetch(`/api/bookings/${id}`, { method: 'PATCH' })
+    const json = await res.json()
+    if (json.success) {
+      setBooking((b) => b ? { ...b, status: 'cancelled' } : b)
+    }
+    setCancelling(false)
+    setConfirmCancel(false)
   }
 
   const status = STATUS_CONFIG[booking.status] ?? STATUS_CONFIG['pending_arrival']
@@ -105,6 +118,39 @@ export default function BookingStatusPage() {
           <span className="font-bold text-green-600">฿{booking.servicePrice.toLocaleString()}</span>
         </div>
       </div>
+
+      {booking.status === 'pending_arrival' && (
+        <div className="mx-4 mt-4">
+          {!confirmCancel ? (
+            <button
+              onClick={() => setConfirmCancel(true)}
+              className="w-full rounded-2xl border border-red-200 bg-white py-3 text-sm font-medium text-red-500 transition-all active:scale-[0.98] hover:bg-red-50"
+            >
+              ยกเลิกการจอง
+            </button>
+          ) : (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-4 space-y-3">
+              <p className="text-sm font-medium text-red-700 text-center">ยืนยันการยกเลิก?</p>
+              <p className="text-xs text-red-500 text-center">การจองจะถูกยกเลิกและ slot จะเปิดให้คนอื่นจองได้</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setConfirmCancel(false)}
+                  className="flex-1 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-medium text-gray-600"
+                >
+                  ไม่ยกเลิก
+                </button>
+                <button
+                  onClick={handleCancel}
+                  disabled={cancelling}
+                  className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                >
+                  {cancelling ? 'กำลังยกเลิก...' : 'ยืนยันยกเลิก'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <p className="text-center text-xs text-gray-400 mt-4">
         จองเมื่อ {new Date(booking.createdAt).toLocaleString('th-TH')}
