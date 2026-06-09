@@ -61,7 +61,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-5 w-5 animate-spin text-slate-500" />
+        <Loader2 className="h-5 w-5 animate-spin text-stone-500" />
       </div>
     )
   }
@@ -69,19 +69,19 @@ export default function SettingsPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-white">ตั้งค่าร้าน</h1>
-        <p className="text-sm text-slate-400 mt-0.5">ข้อมูลพื้นฐานและกฎการจองคิว</p>
+        <h1 className="text-xl font-semibold text-stone-50">ตั้งค่าร้าน</h1>
+        <p className="text-sm text-stone-400 mt-0.5">ข้อมูลพื้นฐานและกฎการจองคิว</p>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-lg space-y-6">
-        <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
-          <h2 className="text-sm font-medium text-white border-b border-slate-800 pb-3">ข้อมูลร้าน</h2>
+        <div className="rounded-xl border border-stone-800 bg-stone-900 p-6 space-y-5">
+          <h2 className="text-sm font-medium text-stone-50 border-b border-stone-800 pb-3">ข้อมูลร้าน</h2>
           <div className="space-y-1.5">
-            <Label className="text-slate-300">ชื่อร้าน</Label>
+            <Label className="text-stone-300">ชื่อร้าน</Label>
             <Input
               {...form.register('shopName')}
               placeholder="ร้านตัดผม..."
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-stone-800 border-stone-700 text-stone-50 placeholder:text-stone-500"
             />
             {form.formState.errors.shopName && (
               <p className="text-xs text-red-400">{form.formState.errors.shopName.message}</p>
@@ -89,25 +89,25 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 space-y-5">
-          <h2 className="text-sm font-medium text-white border-b border-slate-800 pb-3">กฎการจองคิว</h2>
+        <div className="rounded-xl border border-stone-800 bg-stone-900 p-6 space-y-5">
+          <h2 className="text-sm font-medium text-stone-50 border-b border-stone-800 pb-3">กฎการจองคิว</h2>
           <div className="space-y-1.5">
-            <Label className="text-slate-300">Grace Period (นาที)</Label>
+            <Label className="text-stone-300">Grace Period (นาที)</Label>
             <Input
               {...form.register('gracePeriodMinutes', { valueAsNumber: true })}
               type="number"
-              className="bg-slate-800 border-slate-700 text-white"
+              className="bg-stone-800 border-stone-700 text-stone-50"
             />
-            <p className="text-xs text-slate-500">ระยะเวลาที่ยังรอลูกค้ามาช้าได้ก่อนตัดสิทธิ์</p>
+            <p className="text-xs text-stone-500">ระยะเวลาที่ยังรอลูกค้ามาช้าได้ก่อนตัดสิทธิ์</p>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-slate-300">Buffer Time (นาที)</Label>
+            <Label className="text-stone-300">Buffer Time (นาที)</Label>
             <Input
               {...form.register('bufferMinutes', { valueAsNumber: true })}
               type="number"
-              className="bg-slate-800 border-slate-700 text-white"
+              className="bg-stone-800 border-stone-700 text-stone-50"
             />
-            <p className="text-xs text-slate-500">เวลาเผื่อระหว่างลูกค้าแต่ละคน</p>
+            <p className="text-xs text-stone-500">เวลาเผื่อระหว่างลูกค้าแต่ละคน</p>
           </div>
         </div>
 
@@ -115,12 +115,12 @@ export default function SettingsPage() {
           <Button
             type="submit"
             disabled={saving}
-            className="bg-green-500 hover:bg-green-600 text-white"
+            className="bg-amber-500 hover:bg-amber-600 text-stone-950"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
             บันทึก
           </Button>
-          {saved && <span className="text-sm text-green-400">บันทึกสำเร็จ</span>}
+          {saved && <span className="text-sm text-emerald-400">บันทึกสำเร็จ</span>}
         </div>
       </form>
     </div>

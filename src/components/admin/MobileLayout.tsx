@@ -8,7 +8,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="flex h-screen bg-stone-950 overflow-hidden">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -17,7 +17,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
         />
       )}
 
-      {/* Sidebar — hidden on mobile unless open */}
+      {/* Sidebar */}
       <div className={`
         fixed inset-y-0 left-0 z-30 transition-transform duration-200 md:static md:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -28,19 +28,19 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
       {/* Main */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         {/* Mobile header */}
-        <div className="flex h-12 items-center gap-3 border-b border-slate-800 bg-slate-900 px-4 md:hidden">
+        <div className="flex h-12 items-center gap-3 border-b border-stone-700 bg-stone-900 px-4 md:hidden">
           <button
             data-testid="mobile-menu-btn"
             onClick={() => setSidebarOpen(true)}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-stone-400 hover:text-stone-50 transition-colors"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="text-sm font-medium text-white">Admin Panel</span>
+          <span className="text-sm font-medium text-stone-50">Admin Panel</span>
           {sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(false)}
-              className="ml-auto text-slate-400 hover:text-white"
+              className="ml-auto text-stone-400 hover:text-stone-50"
             >
               <X className="h-5 w-5" />
             </button>

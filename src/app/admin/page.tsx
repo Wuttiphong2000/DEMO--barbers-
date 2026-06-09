@@ -18,10 +18,7 @@ export default async function AdminPage() {
 
   const currentTimeMinutes = now.getHours() * 60 + now.getMinutes()
 
-  const gracePeriodRow = await prisma.setting.findUnique({ where: { key: 'grace_period_minutes' } })
-  const gracePeriodMinutes = parseInt(gracePeriodRow?.value ?? '15', 10)
-
-  const [rawBookings, services, barbers, newCustomers] = await Promise.all([
+  const [rawBookings, services, barbers, newCustomers, gracePeriodRow] = await Promise.all([
     prisma.booking.findMany({
       where: {
         date: { gte: today, lt: tomorrow },
@@ -45,7 +42,9 @@ export default async function AdminPage() {
     prisma.customer.count({
       where: { createdAt: { gte: today, lt: tomorrow } },
     }),
+    prisma.setting.findUnique({ where: { key: 'grace_period_minutes' } }),
   ])
+  const gracePeriodMinutes = parseInt(gracePeriodRow?.value ?? '15', 10)
 
   function parseTimeMinutes(slot: string): number {
     const [h, m] = slot.split(':').map(Number)

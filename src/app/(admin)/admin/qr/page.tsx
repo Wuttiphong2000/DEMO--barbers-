@@ -38,15 +38,15 @@ export default function QRPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-white">QR Code จองคิว</h1>
-        <p className="text-sm text-slate-400 mt-0.5">พิมพ์ QR Code นี้ติดหน้าร้านให้ลูกค้าสแกนเพื่อจองคิว</p>
+        <h1 className="text-xl font-semibold text-stone-50">QR Code จองคิว</h1>
+        <p className="text-sm text-stone-400 mt-0.5">พิมพ์ QR Code นี้ติดหน้าร้านให้ลูกค้าสแกนเพื่อจองคิว</p>
       </div>
 
       <div className="max-w-sm">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 flex flex-col items-center gap-6">
+        <div className="rounded-2xl border border-stone-800 bg-stone-900 p-6 flex flex-col items-center gap-6">
           {loading ? (
             <div className="h-64 w-64 flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-slate-500" />
+              <Loader2 className="h-8 w-8 animate-spin text-stone-500" />
             </div>
           ) : (
             <>
@@ -56,16 +56,16 @@ export default function QRPage() {
               </div>
 
               <div className="text-center space-y-1">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <QrCode className="h-4 w-4 text-green-400" />
+                <div className="flex items-center gap-2 text-stone-300">
+                  <QrCode className="h-4 w-4 text-amber-400" />
                   <span className="text-sm font-medium">สแกนเพื่อจองคิว</span>
                 </div>
-                <p className="text-xs text-slate-500 break-all">{bookingUrl}</p>
+                <p className="text-xs text-stone-500 break-all">{bookingUrl}</p>
               </div>
 
               <Button
                 onClick={handleDownload}
-                className="w-full bg-green-500 hover:bg-green-600 text-white"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-stone-950"
               >
                 <Download className="h-4 w-4 mr-2" />
                 ดาวน์โหลด PNG

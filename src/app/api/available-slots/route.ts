@@ -2,10 +2,24 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
 import { getAvailableSlotsForDate } from '@/lib/booking'
 import { isShopOpenOnDate } from '@/lib/hours'
 import { ok, err } from '@/lib/api-response'
+
+const getShopStaticData = unstable_cache(
+  async () => {
+    const [specialDays, businessHours, settings] = await Promise.all([
+      prisma.specialDay.findMany(),
+      prisma.businessHour.findMany(),
+      prisma.setting.findMany(),
+    ])
+    return { specialDays, businessHours, settings }
+  },
+  ['shop-static-data'],
+  { revalidate: 300 }
+)
 
 const querySchema = z.object({
   barberId: z.string().min(1),
@@ -26,11 +40,7 @@ export async function GET(request: NextRequest) {
   const { barberId, date, serviceId } = parsed.data
   const dateObj = new Date(date)
 
-  const [specialDays, businessHours, settings] = await Promise.all([
-    prisma.specialDay.findMany(),
-    prisma.businessHour.findMany(),
-    prisma.setting.findMany(),
-  ])
+  const { specialDays, businessHours, settings } = await getShopStaticData()
 
   const specialDaysFormatted = specialDays.map((s) => ({
     ...s,

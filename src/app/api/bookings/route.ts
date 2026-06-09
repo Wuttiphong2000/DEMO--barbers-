@@ -23,6 +23,11 @@ export async function POST(request: NextRequest) {
     return err(parsed.error.issues[0].message, 400)
   }
 
+  const todayStr = new Date().toISOString().slice(0, 10)
+  if (parsed.data.date < todayStr) {
+    return err('cannot_book_past_date', 400)
+  }
+
   const result = await createBooking(parsed.data)
 
   if (!result.success) {

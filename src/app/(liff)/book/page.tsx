@@ -25,9 +25,9 @@ interface Barber {
 interface BookingState {
   step: 1 | 2 | 3 | 4 | 5
   service: Service | null
-  barberId: string | null  // null = any barber
+  barberId: string | null
   barberName: string
-  date: string             // YYYY-MM-DD
+  date: string
   timeSlot: string
 }
 
@@ -43,16 +43,16 @@ function StepDots({ current }: { current: number }) {
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-all ${
               i + 1 < current
-                ? 'bg-green-500 text-white'
+                ? 'bg-amber-500 text-stone-950'
                 : i + 1 === current
-                ? 'bg-green-600 text-white shadow-md shadow-green-200'
-                : 'bg-gray-100 text-gray-400'
+                ? 'bg-amber-500 text-stone-950 shadow-md shadow-amber-500/30'
+                : 'bg-stone-800 text-stone-500'
             }`}
           >
             {i + 1 < current ? <Check className="h-3.5 w-3.5" /> : i + 1}
           </div>
           {i < STEPS.length - 1 && (
-            <div className={`h-0.5 w-6 rounded-full transition-all ${i + 1 < current ? 'bg-green-400' : 'bg-gray-200'}`} />
+            <div className={`h-0.5 w-6 rounded-full transition-all ${i + 1 < current ? 'bg-amber-500' : 'bg-stone-700'}`} />
           )}
         </div>
       ))}
@@ -79,23 +79,23 @@ function StepService({ onSelect }: { onSelect: (s: Service) => void }) {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-base font-semibold text-gray-800">เลือกบริการ</h2>
+      <h2 className="text-base font-semibold text-stone-50">เลือกบริการ</h2>
       {services.map((s) => (
         <button
           key={s.id}
           onClick={() => onSelect(s)}
-          className="flex w-full items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition-all active:scale-[0.98] hover:border-green-300 hover:shadow-md"
+          className="flex w-full items-center justify-between rounded-2xl border border-stone-700 bg-stone-900 p-4 text-left transition-all active:scale-[0.98] hover:border-amber-500/50 hover:bg-stone-800"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50">
-              <Scissors className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
+              <Scissors className="h-5 w-5 text-amber-400" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">{s.name}</p>
-              <p className="text-sm text-gray-500">{s.durationMinutes} นาที</p>
+              <p className="font-medium text-stone-100">{s.name}</p>
+              <p className="text-sm text-stone-500">{s.durationMinutes} นาที</p>
             </div>
           </div>
-          <p className="text-base font-semibold text-green-600">฿{s.price.toLocaleString()}</p>
+          <p className="text-base font-semibold text-amber-400">฿{s.price.toLocaleString()}</p>
         </button>
       ))}
     </div>
@@ -121,19 +121,18 @@ function StepBarber({ onSelect }: { onSelect: (barberId: string | null, name: st
 
   return (
     <div className="space-y-3">
-      <h2 className="text-base font-semibold text-gray-800">เลือกช่าง</h2>
+      <h2 className="text-base font-semibold text-stone-50">เลือกช่าง</h2>
 
-      {/* Any barber option */}
       <button
         onClick={() => onSelect(null, 'ไม่ระบุช่าง')}
-        className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 p-4 text-left transition-all active:scale-[0.98] hover:border-green-300 hover:bg-green-50"
+        className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-stone-700 bg-stone-900/50 p-4 text-left transition-all active:scale-[0.98] hover:border-amber-500/50 hover:bg-stone-800"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
-          <User className="h-5 w-5 text-gray-500" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-800">
+          <User className="h-5 w-5 text-stone-400" />
         </div>
         <div>
-          <p className="font-medium text-gray-700">ไม่ระบุช่าง</p>
-          <p className="text-sm text-gray-400">ระบบจะจัดช่างให้อัตโนมัติ</p>
+          <p className="font-medium text-stone-300">ไม่ระบุช่าง</p>
+          <p className="text-sm text-stone-500">ระบบจะจัดช่างให้อัตโนมัติ</p>
         </div>
       </button>
 
@@ -141,12 +140,12 @@ function StepBarber({ onSelect }: { onSelect: (barberId: string | null, name: st
         <button
           key={b.id}
           onClick={() => onSelect(b.id, b.name)}
-          className="flex w-full items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition-all active:scale-[0.98] hover:border-green-300 hover:shadow-md"
+          className="flex w-full items-center gap-3 rounded-2xl border border-stone-700 bg-stone-900 p-4 text-left transition-all active:scale-[0.98] hover:border-amber-500/50 hover:bg-stone-800"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white font-semibold text-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-stone-950 font-semibold text-sm">
             {b.name.charAt(0).toUpperCase()}
           </div>
-          <p className="font-medium text-gray-900">{b.name}</p>
+          <p className="font-medium text-stone-100">{b.name}</p>
         </button>
       ))}
     </div>
@@ -162,10 +161,13 @@ function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
+  const toLocalDateStr = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
   const dates = Array.from({ length: 30 }, (_, i) => {
     const d = new Date(today)
     d.setDate(today.getDate() + i)
-    return d.toISOString().slice(0, 10)
+    return toLocalDateStr(d)
   })
 
   useEffect(() => {
@@ -204,7 +206,7 @@ function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-base font-semibold text-gray-800">เลือกวันที่</h2>
+      <h2 className="text-base font-semibold text-stone-50">เลือกวันที่</h2>
       <div className="grid grid-cols-3 gap-2">
         {dates.map((d) => {
           const dateObj = new Date(d)
@@ -217,15 +219,15 @@ function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
               data-testid={isOpen ? 'date-open' : 'date-closed'}
               className={`flex flex-col items-center rounded-2xl p-3 transition-all ${
                 isOpen
-                  ? 'bg-white border border-gray-100 shadow-sm active:scale-[0.97] hover:border-green-300 hover:shadow-md'
-                  : 'bg-gray-50 opacity-40 cursor-not-allowed'
+                  ? 'border border-stone-700 bg-stone-900 active:scale-[0.97] hover:border-amber-500/50 hover:bg-stone-800'
+                  : 'bg-stone-900/30 opacity-40 cursor-not-allowed'
               }`}
             >
-              <span className="text-xs text-gray-400">{thDays[dateObj.getDay()]}</span>
-              <span className={`text-xl font-bold mt-0.5 ${isOpen ? 'text-gray-900' : 'text-gray-400'}`}>
+              <span className="text-xs text-stone-500">{thDays[dateObj.getDay()]}</span>
+              <span className={`text-xl font-bold mt-0.5 ${isOpen ? 'text-stone-50' : 'text-stone-600'}`}>
                 {dateObj.getDate()}
               </span>
-              <span className="text-xs text-gray-400">{thMonths[dateObj.getMonth()]}</span>
+              <span className="text-xs text-stone-500">{thMonths[dateObj.getMonth()]}</span>
             </button>
           )
         })}
@@ -253,15 +255,12 @@ function StepSlot({
 
   useEffect(() => {
     if (!barberId) {
-      // For "any barber", fetch barbers first, pick first active, then get slots
       fetch('/api/barbers')
         .then((r) => r.json())
         .then((json) => {
           const active = json.data?.filter((b: Barber) => b.isActive) ?? []
           if (active.length === 0) { setLoading(false); return }
-          // Use first barber as proxy for slot availability
-          const firstBarberId = active[0].id
-          return fetchSlots(firstBarberId)
+          return fetchSlots(active[0].id)
         })
     } else {
       fetchSlots(barberId)
@@ -284,7 +283,7 @@ function StepSlot({
 
   if (closed) {
     return (
-      <div className="flex flex-col items-center gap-3 py-12 text-gray-400">
+      <div className="flex flex-col items-center gap-3 py-12 text-stone-500">
         <Calendar className="h-10 w-10" />
         <p className="text-sm">ร้านปิดในวันนี้</p>
       </div>
@@ -293,7 +292,7 @@ function StepSlot({
 
   if (slots.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 py-12 text-gray-400">
+      <div className="flex flex-col items-center gap-3 py-12 text-stone-500">
         <Clock className="h-10 w-10" />
         <p className="text-sm">ไม่มีช่วงเวลาว่างในวันนี้</p>
       </div>
@@ -302,13 +301,13 @@ function StepSlot({
 
   return (
     <div className="space-y-3">
-      <h2 className="text-base font-semibold text-gray-800">เลือกเวลา</h2>
+      <h2 className="text-base font-semibold text-stone-50">เลือกเวลา</h2>
       <div className="grid grid-cols-3 gap-2">
         {slots.map((slot) => (
           <button
             key={slot}
             onClick={() => onSelect(slot)}
-            className="rounded-2xl border border-gray-100 bg-white py-3 text-center text-sm font-semibold text-gray-800 shadow-sm transition-all active:scale-[0.97] hover:border-green-400 hover:bg-green-50 hover:text-green-700"
+            className="rounded-2xl border border-stone-700 bg-stone-900 py-3 text-center text-sm font-semibold text-stone-200 transition-all active:scale-[0.97] hover:border-amber-500/50 hover:bg-stone-800 hover:text-amber-400"
           >
             {slot}
           </button>
@@ -368,31 +367,31 @@ function StepConfirm({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-base font-semibold text-gray-800">ยืนยันการจอง</h2>
+      <h2 className="text-base font-semibold text-stone-50">ยืนยันการจอง</h2>
 
-      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm space-y-3">
-        <Row icon={<Scissors className="h-4 w-4 text-green-600" />} label="บริการ" value={state.service!.name} />
-        <div className="border-t border-gray-100" />
-        <Row icon={<User className="h-4 w-4 text-green-600" />} label="ช่าง" value={state.barberName} />
-        <div className="border-t border-gray-100" />
-        <Row icon={<Calendar className="h-4 w-4 text-green-600" />} label="วันที่" value={dateDisplay} />
-        <div className="border-t border-gray-100" />
-        <Row icon={<Clock className="h-4 w-4 text-green-600" />} label="เวลา" value={state.timeSlot} />
-        <div className="border-t border-gray-100" />
+      <div className="rounded-2xl border border-stone-700 bg-stone-900 p-5 space-y-3">
+        <Row icon={<Scissors className="h-4 w-4 text-amber-400" />} label="บริการ" value={state.service!.name} />
+        <div className="border-t border-stone-800" />
+        <Row icon={<User className="h-4 w-4 text-amber-400" />} label="ช่าง" value={state.barberName} />
+        <div className="border-t border-stone-800" />
+        <Row icon={<Calendar className="h-4 w-4 text-amber-400" />} label="วันที่" value={dateDisplay} />
+        <div className="border-t border-stone-800" />
+        <Row icon={<Clock className="h-4 w-4 text-amber-400" />} label="เวลา" value={state.timeSlot} />
+        <div className="border-t border-stone-800" />
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500">ค่าบริการ</span>
-          <span className="font-bold text-green-600 text-base">฿{state.service!.price.toLocaleString()}</span>
+          <span className="text-sm text-stone-500">ค่าบริการ</span>
+          <span className="font-bold text-amber-400 text-base">฿{state.service!.price.toLocaleString()}</span>
         </div>
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-600">{error}</div>
+        <div className="rounded-xl bg-red-950 border border-red-800 p-3 text-sm text-red-400">{error}</div>
       )}
 
       <button
         onClick={handleConfirm}
         disabled={loading}
-        className="w-full rounded-2xl bg-green-600 py-4 text-base font-semibold text-white shadow-md shadow-green-100 transition-all active:scale-[0.98] hover:bg-green-700 disabled:opacity-60"
+        className="w-full rounded-2xl bg-amber-500 py-4 text-base font-semibold text-stone-950 shadow-md shadow-amber-500/20 transition-all active:scale-[0.98] hover:bg-amber-400 disabled:opacity-60"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">
@@ -410,11 +409,11 @@ function StepConfirm({
 function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-stone-500">
         {icon}
         {label}
       </div>
-      <span className="text-sm font-medium text-gray-900">{value}</span>
+      <span className="text-sm font-medium text-stone-100">{value}</span>
     </div>
   )
 }
@@ -422,7 +421,7 @@ function Row({ icon, label, value }: { icon: React.ReactNode; label: string; val
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-16">
-      <Loader2 className="h-6 w-6 animate-spin text-green-500" />
+      <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
     </div>
   )
 }
@@ -444,8 +443,8 @@ export default function BookPage() {
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-green-500" />
+      <div className="flex min-h-screen items-center justify-center bg-stone-950">
+        <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
       </div>
     )
   }
@@ -457,23 +456,11 @@ export default function BookPage() {
   function renderStep() {
     switch (state.step) {
       case 1:
-        return (
-          <StepService
-            onSelect={(service) => setState((s) => ({ ...s, service, step: 2 }))}
-          />
-        )
+        return <StepService onSelect={(service) => setState((s) => ({ ...s, service, step: 2 }))} />
       case 2:
-        return (
-          <StepBarber
-            onSelect={(barberId, barberName) => setState((s) => ({ ...s, barberId, barberName, step: 3 }))}
-          />
-        )
+        return <StepBarber onSelect={(barberId, barberName) => setState((s) => ({ ...s, barberId, barberName, step: 3 }))} />
       case 3:
-        return (
-          <StepDate
-            onSelect={(date) => setState((s) => ({ ...s, date, step: 4 }))}
-          />
-        )
+        return <StepDate onSelect={(date) => setState((s) => ({ ...s, date, step: 4 }))} />
       case 4:
         return (
           <StepSlot
@@ -496,15 +483,15 @@ export default function BookPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md min-h-screen">
-      <div className="sticky top-0 z-10 bg-gray-50 border-b border-gray-100">
+    <div className="mx-auto max-w-md min-h-screen bg-stone-950">
+      <div className="sticky top-0 z-10 bg-stone-950 border-b border-stone-800">
         <div className="flex items-center gap-3 px-4 pt-4 pb-2">
           {state.step > 1 && (
-            <button onClick={back} className="rounded-xl p-2 hover:bg-gray-100 transition-colors">
-              <ChevronLeft className="h-5 w-5 text-gray-600" />
+            <button onClick={back} className="rounded-xl p-2 hover:bg-stone-800 transition-colors">
+              <ChevronLeft className="h-5 w-5 text-stone-400" />
             </button>
           )}
-          <h1 className="text-lg font-bold text-gray-900">จองคิว</h1>
+          <h1 className="text-lg font-bold text-stone-50">จองคิว</h1>
         </div>
         <StepDots current={state.step} />
       </div>

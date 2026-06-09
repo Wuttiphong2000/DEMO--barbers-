@@ -47,6 +47,16 @@ const config: Config = {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
+        /* Design system aliases — use bg-ds-* / text-ds-* in components */
+        ds: {
+          bg: 'hsl(var(--background))',
+          surface: 'hsl(var(--card))',
+          elevated: 'hsl(var(--popover))',
+          border: 'hsl(var(--border))',
+          accent: 'hsl(var(--primary))',
+          'accent-fg': 'hsl(var(--primary-foreground))',
+          muted: 'hsl(var(--muted-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

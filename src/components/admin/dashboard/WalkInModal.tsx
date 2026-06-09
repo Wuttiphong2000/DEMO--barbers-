@@ -61,54 +61,50 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
 
   return (
     <div data-testid="walkin-modal" className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-stone-900 border border-stone-700 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">+ เพิ่มคิว Walk-in</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+        <div className="flex items-center justify-between border-b border-stone-700 px-5 py-4">
+          <h2 className="text-sm font-semibold text-stone-50">+ เพิ่มคิว Walk-in</h2>
+          <button onClick={onClose} className="text-stone-400 hover:text-stone-50 transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {queueResult ? (
-          /* Success state */
           <div className="flex flex-col items-center gap-3 px-5 py-8">
-            <p className="text-slate-400 text-sm">ออกคิวสำเร็จ</p>
-            <p className="font-mono text-5xl font-bold text-white">{queueResult}</p>
+            <p className="text-stone-400 text-sm">ออกคิวสำเร็จ</p>
+            <p className="font-mono text-5xl font-bold text-stone-50">{queueResult}</p>
             <button
               onClick={onClose}
-              className="mt-4 w-full rounded-xl bg-green-600 py-2.5 text-sm font-medium text-white hover:bg-green-500 transition-colors"
+              className="mt-4 w-full rounded-xl bg-amber-500 py-2.5 text-sm font-medium text-stone-950 hover:bg-amber-400 transition-colors"
             >
               ปิด
             </button>
           </div>
         ) : (
-          /* Form */
           <div className="p-5 space-y-4">
-            {/* Customer name */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                ชื่อลูกค้า <span className="text-slate-600">(ไม่บังคับ)</span>
+              <label className="mb-1.5 block text-xs font-medium text-stone-400">
+                ชื่อลูกค้า <span className="text-stone-600">(ไม่บังคับ)</span>
               </label>
               <input
                 name="customerName"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="นาย..."
-                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-stone-700 bg-stone-800 px-4 py-2.5 text-sm text-stone-100 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none"
               />
             </div>
 
-            {/* Service */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-400">
+              <label className="mb-1.5 block text-xs font-medium text-stone-400">
                 บริการ <span className="text-red-400">*</span>
               </label>
               <select
                 name="serviceId"
                 value={serviceId}
                 onChange={(e) => setServiceId(e.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-stone-700 bg-stone-800 px-4 py-2.5 text-sm text-stone-100 focus:border-amber-500 focus:outline-none"
               >
                 {services.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -118,9 +114,8 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
               </select>
             </div>
 
-            {/* Barber */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-400">ช่าง</label>
+              <label className="mb-1.5 block text-xs font-medium text-stone-400">ช่าง</label>
               <div className="flex flex-wrap gap-2">
                 {barbers.map((b) => (
                   <button
@@ -128,8 +123,8 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
                     onClick={() => setBarberId(b.id === barberId ? null : b.id)}
                     className={`rounded-xl border px-4 py-2 text-xs font-medium transition-colors ${
                       barberId === b.id
-                        ? 'border-blue-500 bg-blue-600 text-white'
-                        : 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600'
+                        ? 'border-amber-500 bg-amber-500 text-stone-950'
+                        : 'border-stone-700 bg-stone-800 text-stone-300 hover:border-stone-600'
                     }`}
                   >
                     {b.name}
@@ -139,8 +134,8 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
                   onClick={() => setBarberId(null)}
                   className={`rounded-xl border px-4 py-2 text-xs font-medium transition-colors ${
                     barberId === null
-                      ? 'border-blue-500 bg-blue-600 text-white'
-                      : 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600'
+                      ? 'border-amber-500 bg-amber-500 text-stone-950'
+                      : 'border-stone-700 bg-stone-800 text-stone-300 hover:border-stone-600'
                   }`}
                 >
                   ไม่ระบุ
@@ -157,7 +152,7 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
             <button
               onClick={handleSubmit}
               disabled={loading || !serviceId}
-              className="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-amber-500 py-2.5 text-sm font-medium text-stone-950 hover:bg-amber-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

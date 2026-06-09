@@ -37,7 +37,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
 
 const COLOR_MAP = {
   blue: 'border-blue-500/20 bg-blue-500/5 text-blue-400',
-  green: 'border-green-500/20 bg-green-500/5 text-green-400',
+  green: 'border-sky-500/20 bg-sky-500/5 text-sky-400',
   amber: 'border-amber-500/20 bg-amber-500/5 text-amber-400',
   violet: 'border-violet-500/20 bg-violet-500/5 text-violet-400',
 }
@@ -55,9 +55,9 @@ function StatCard({
 }) {
   return (
     <div data-testid="stat-card" className={`rounded-xl border p-4 ${COLOR_MAP[color]}`}>
-      <p className="text-xs text-slate-400 mb-1">{label}</p>
-      <p className="font-mono text-2xl font-bold text-slate-50">{value}</p>
-      {sub && <p className="mt-1 text-xs text-slate-500 truncate">{sub}</p>}
+      <p className="text-xs text-stone-400 mb-1">{label}</p>
+      <p className="font-mono text-2xl font-bold text-stone-50">{value}</p>
+      {sub && <p className="mt-1 text-xs text-stone-500 truncate">{sub}</p>}
     </div>
   )
 }

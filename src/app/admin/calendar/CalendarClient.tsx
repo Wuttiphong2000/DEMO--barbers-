@@ -32,11 +32,11 @@ interface CalendarClientProps {
 const TH_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
 const TH_DAYS_SHORT = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
 const STATUS_COLOR: Record<string, string> = {
-  pending_arrival: 'bg-blue-500',
-  in_progress: 'bg-green-500',
-  done: 'bg-slate-500',
+  pending_arrival: 'bg-amber-500',
+  in_progress: 'bg-sky-500',
+  done: 'bg-stone-500',
   cancelled: 'bg-red-500',
-  no_show: 'bg-amber-500',
+  no_show: 'bg-red-400',
 }
 
 function buildCalendarGrid(year: number, month: number, dayDataMap: Map<string, CalendarDay>) {
@@ -80,31 +80,31 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
   const maxCount = Math.max(...days.map((d) => d.count), 1)
 
   return (
-    <div className="min-h-full bg-slate-950 p-4 md:p-6 space-y-5">
+    <div className="min-h-full bg-stone-950 p-4 md:p-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white">ปฏิทิน</h1>
-          <p className="text-xs text-slate-400">{TH_MONTHS[month - 1]} {year + 543}</p>
+          <h1 className="text-lg font-semibold text-stone-50">ปฏิทิน</h1>
+          <p className="text-xs text-stone-400">{TH_MONTHS[month - 1]} {year + 543}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             data-testid="cal-prev"
             onClick={() => navigate(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-700 bg-stone-800 text-stone-300 hover:bg-stone-700 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => router.push(`/admin/calendar`)}
-            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700 transition-colors"
+            className="rounded-lg border border-stone-700 bg-stone-800 px-3 py-1.5 text-xs text-stone-300 hover:bg-stone-700 transition-colors"
           >
             วันนี้
           </button>
           <button
             data-testid="cal-next"
             onClick={() => navigate(1)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-700 bg-stone-800 text-stone-300 hover:bg-stone-700 transition-colors"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -112,11 +112,11 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
       </div>
 
       {/* Calendar grid */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
+      <div className="rounded-2xl border border-stone-800 bg-stone-900 overflow-hidden">
         {/* Day headers */}
-        <div className="grid grid-cols-7 border-b border-slate-800">
+        <div className="grid grid-cols-7 border-b border-stone-800">
           {TH_DAYS_SHORT.map((d) => (
-            <div key={d} data-testid="cal-day-header" className="py-2 text-center text-xs font-medium text-slate-500">{d}</div>
+            <div key={d} data-testid="cal-day-header" className="py-2 text-center text-xs font-medium text-stone-500">{d}</div>
           ))}
         </div>
 
@@ -124,7 +124,7 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
         <div className="grid grid-cols-7">
           {cells.map((cell, i) => {
             if (!cell) {
-              return <div key={`empty-${i}`} className="aspect-square border-b border-r border-slate-800/50" />
+              return <div key={`empty-${i}`} className="aspect-square border-b border-r border-stone-800/50" />
             }
             const isToday = cell.date === today
             const isSelected = cell.date === selectedDate
@@ -135,14 +135,14 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
                 key={cell.date}
                 onClick={() => handleDayClick(cell.date)}
                 className={cn(
-                  'group relative aspect-square border-b border-r border-slate-800/50 p-1.5 text-left transition-all hover:bg-slate-800/50',
-                  isSelected && 'bg-slate-800',
-                  isToday && 'ring-1 ring-inset ring-blue-500/50'
+                  'group relative aspect-square border-b border-r border-stone-800/50 p-1.5 text-left transition-all hover:bg-stone-800/50',
+                  isSelected && 'bg-stone-800',
+                  isToday && 'ring-1 ring-inset ring-amber-500/50'
                 )}
               >
                 <span className={cn(
                   'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
-                  isToday ? 'bg-blue-500 text-white' : 'text-slate-300'
+                  isToday ? 'bg-amber-500 text-stone-950' : 'text-stone-300'
                 )}>
                   {cell.dateObj.getDate()}
                 </span>
@@ -150,10 +150,10 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
                 {cell.count > 0 && (
                   <>
                     <div
-                      className="mt-1 h-1 rounded-full bg-green-500"
+                      className="mt-1 h-1 rounded-full bg-amber-500"
                       style={{ opacity: intensity, width: `${Math.min(100, cell.count * 20)}%` }}
                     />
-                    <span className="absolute bottom-1 right-1.5 text-[10px] text-slate-500 group-hover:text-slate-400">
+                    <span className="absolute bottom-1 right-1.5 text-[10px] text-stone-500 group-hover:text-stone-400">
                       {cell.count}
                     </span>
                   </>
@@ -166,28 +166,28 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
 
       {/* Day detail */}
       {selectedDay && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
-          <div className="border-b border-slate-800 px-4 py-3">
-            <p className="text-sm font-medium text-white">
+        <div className="rounded-2xl border border-stone-800 bg-stone-900 overflow-hidden">
+          <div className="border-b border-stone-800 px-4 py-3">
+            <p className="text-sm font-medium text-stone-50">
               {new Date(selectedDay.date + 'T00:00:00').toLocaleDateString('th-TH', {
                 weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
               })}
             </p>
-            <p className="text-xs text-slate-400">{selectedDay.count} การจอง</p>
+            <p className="text-xs text-stone-400">{selectedDay.count} การจอง</p>
           </div>
 
           {selectedDay.bookings.length === 0 ? (
-            <div className="py-8 text-center text-sm text-slate-500">ไม่มีการจอง</div>
+            <div className="py-8 text-center text-sm text-stone-500">ไม่มีการจอง</div>
           ) : (
-            <div className="divide-y divide-slate-800">
+            <div className="divide-y divide-stone-800">
               {selectedDay.bookings.map((b) => (
                 <div key={b.id} className="flex items-center gap-3 px-4 py-3">
-                  <span className={cn('h-2 w-2 rounded-full flex-shrink-0', STATUS_COLOR[b.status] ?? 'bg-slate-500')} />
-                  <span className="font-mono text-sm font-bold text-slate-300 w-12">{b.queueNumber}</span>
-                  <span className="text-xs text-slate-400 w-10">{b.timeSlot}</span>
-                  <span className="flex-1 truncate text-xs text-slate-300">{b.customerName}</span>
-                  <span className="text-xs text-slate-500 hidden sm:block">{b.serviceName}</span>
-                  <span className="flex items-center gap-1 text-xs text-slate-500">
+                  <span className={cn('h-2 w-2 rounded-full flex-shrink-0', STATUS_COLOR[b.status] ?? 'bg-stone-500')} />
+                  <span className="font-mono text-sm font-bold text-stone-300 w-12">{b.queueNumber}</span>
+                  <span className="text-xs text-stone-400 w-10">{b.timeSlot}</span>
+                  <span className="flex-1 truncate text-xs text-stone-300">{b.customerName}</span>
+                  <span className="text-xs text-stone-500 hidden sm:block">{b.serviceName}</span>
+                  <span className="flex items-center gap-1 text-xs text-stone-500">
                     <Scissors className="h-3 w-3" />
                     {b.barberName}
                   </span>

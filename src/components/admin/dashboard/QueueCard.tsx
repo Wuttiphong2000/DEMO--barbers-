@@ -19,18 +19,18 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
   const source = SOURCE_BADGE[booking.source]
 
   return (
-    <div className={`rounded-xl border bg-slate-900 p-4 transition-all ${booking.isLate ? 'border-amber-700/50' : 'border-slate-800'}`}>
+    <div className={`rounded-xl border bg-stone-900 p-4 transition-all ${booking.isLate ? 'border-amber-700/50' : 'border-stone-800'}`}>
       <div className="flex items-start gap-3">
         {/* Queue number */}
         <div className="flex-shrink-0 text-center">
-          <p className="font-mono text-2xl font-bold text-white leading-none">{booking.queueNumber}</p>
-          <p className="text-xs text-slate-500 mt-1">{booking.timeSlot}</p>
+          <p className="font-mono text-2xl font-bold text-stone-50 leading-none">{booking.queueNumber}</p>
+          <p className="text-xs text-stone-500 mt-1">{booking.timeSlot}</p>
         </div>
 
         {/* Details */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-medium text-slate-100 truncate">{booking.customerName}</p>
+            <p className="text-sm font-medium text-stone-100 truncate">{booking.customerName}</p>
             <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium ${source.cls}`}>
               {source.icon}
               {source.label}
@@ -49,7 +49,7 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
             )}
           </div>
 
-          <div className="mt-1 flex items-center gap-3 text-xs text-slate-400">
+          <div className="mt-1 flex items-center gap-3 text-xs text-stone-400">
             <span className="flex items-center gap-1">
               <Scissors className="h-3 w-3" />
               {booking.serviceName}
@@ -58,7 +58,7 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
               <Clock className="h-3 w-3" />
               {booking.serviceDuration} นาที
             </span>
-            <span className="text-slate-500">{booking.barberName}</span>
+            <span className="text-stone-500">{booking.barberName}</span>
           </div>
         </div>
 
@@ -68,13 +68,13 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
             <>
               <ActionButton
                 label="เรียกคิว"
-                className="bg-blue-600 hover:bg-blue-500 text-white"
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950"
                 loading={actionLoading}
                 onClick={() => onAction(booking.id, 'start')}
               />
               <ActionButton
                 label="✕"
-                className="bg-slate-800 hover:bg-red-900 text-slate-300 hover:text-red-400"
+                className="bg-stone-800 hover:bg-red-900 text-stone-300 hover:text-red-400"
                 loading={actionLoading}
                 onClick={() => onAction(booking.id, 'cancel')}
               />
@@ -83,7 +83,7 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
           {booking.status === 'in_progress' && (
             <ActionButton
               label="เสร็จ ✓"
-              className="bg-green-700 hover:bg-green-600 text-white"
+              className="bg-emerald-700 hover:bg-emerald-600 text-white"
               loading={actionLoading}
               onClick={() => onAction(booking.id, 'done')}
             />

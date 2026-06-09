@@ -67,24 +67,24 @@ export function DashboardClient({
   const done = bookings.filter((b) => b.status === 'done')
 
   return (
-    <div className="min-h-full bg-slate-950 p-4 md:p-6 space-y-5">
+    <div className="min-h-full bg-stone-950 p-4 md:p-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white">คิววันนี้</h1>
-          <p className="text-xs text-slate-400">{dateLabel}</p>
+          <h1 className="text-lg font-semibold text-stone-50">คิววันนี้</h1>
+          <p className="text-xs text-stone-400">{dateLabel}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={refresh}
             disabled={refreshing}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-300 hover:bg-slate-700 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl border border-stone-700 bg-stone-800 px-3 py-2 text-xs text-stone-300 hover:bg-stone-700 transition-colors"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           </button>
           <button
             onClick={() => setShowWalkIn(true)}
-            className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-medium text-white hover:bg-blue-500 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-xs font-medium text-stone-950 hover:bg-amber-400 transition-colors"
           >
             <Plus className="h-3.5 w-3.5" />
             Walk-in
@@ -97,17 +97,17 @@ export function DashboardClient({
 
       {/* Queue sections */}
       {inProgress.length === 0 && pending.length === 0 && done.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 py-16 text-center">
-          <p className="text-slate-400 text-sm">ยังไม่มีการจองวันนี้</p>
-          <p className="text-slate-600 text-xs mt-1">กด + Walk-in เพื่อเพิ่มคิว</p>
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-stone-800 bg-stone-900 py-16 text-center">
+          <p className="text-stone-400 text-sm">ยังไม่มีการจองวันนี้</p>
+          <p className="text-stone-600 text-xs mt-1">กด + Walk-in เพื่อเพิ่มคิว</p>
         </div>
       ) : (
         <div className="space-y-4">
           {inProgress.length > 0 && (
             <QueueSection
               title="กำลังให้บริการ"
-              titleColor="text-green-400"
-              indicator="bg-green-500"
+              titleColor="text-sky-400"
+              indicator="bg-sky-500"
               bookings={inProgress}
               actionLoading={actionLoading}
               onAction={handleAction}
@@ -116,8 +116,8 @@ export function DashboardClient({
           {pending.length > 0 && (
             <QueueSection
               title="รอคิว"
-              titleColor="text-blue-400"
-              indicator="bg-blue-500"
+              titleColor="text-amber-400"
+              indicator="bg-amber-500"
               bookings={pending}
               actionLoading={actionLoading}
               onAction={handleAction}
@@ -126,8 +126,8 @@ export function DashboardClient({
           {done.length > 0 && (
             <QueueSection
               title={`เสร็จแล้ว (${done.length})`}
-              titleColor="text-slate-500"
-              indicator="bg-slate-600"
+              titleColor="text-stone-500"
+              indicator="bg-stone-600"
               bookings={done}
               actionLoading={actionLoading}
               onAction={handleAction}
@@ -174,19 +174,19 @@ function QueueSection({
   const [collapsed, setCollapsed] = useState(collapsible ?? false)
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 overflow-hidden">
+    <div className="rounded-2xl border border-stone-800 bg-stone-900/50 overflow-hidden">
       <button
         onClick={() => collapsible && setCollapsed((c) => !c)}
-        className={`flex w-full items-center gap-2 px-4 py-3 ${collapsible ? 'cursor-pointer hover:bg-slate-800/50' : 'cursor-default'}`}
+        className={`flex w-full items-center gap-2 px-4 py-3 ${collapsible ? 'cursor-pointer hover:bg-stone-800/50' : 'cursor-default'}`}
       >
         <span className={`h-2 w-2 rounded-full ${indicator}`} />
         <span className={`text-sm font-medium ${titleColor}`}>{title}</span>
         {collapsible && (
-          <span className="ml-auto text-xs text-slate-500">{collapsed ? '▶' : '▼'}</span>
+          <span className="ml-auto text-xs text-stone-500">{collapsed ? '▶' : '▼'}</span>
         )}
       </button>
       {!collapsed && (
-        <div className="divide-y divide-slate-800/50 px-4 pb-3 space-y-2">
+        <div className="divide-y divide-stone-800/50 px-4 pb-3 space-y-2">
           {bookings.map((b) => (
             <div key={b.id} className="pt-2">
               <QueueCard

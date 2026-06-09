@@ -115,47 +115,47 @@ export default function ServicesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-semibold text-white">บริการ</h1>
-          <p className="text-sm text-slate-400 mt-0.5">จัดการบริการที่ร้านให้บริการ</p>
+          <p className="text-sm text-stone-400 mt-0.5">จัดการบริการที่ร้านให้บริการ</p>
         </div>
-        <Button onClick={openCreate} className="bg-green-500 hover:bg-green-600 text-white">
+        <Button onClick={openCreate} className="bg-amber-500 hover:bg-amber-600 text-white">
           <Plus className="h-4 w-4 mr-2" />
           เพิ่มบริการ
         </Button>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+      <div className="rounded-xl border border-stone-800 bg-stone-900 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-40">
-            <Loader2 className="h-5 w-5 animate-spin text-slate-500" />
+            <Loader2 className="h-5 w-5 animate-spin text-stone-500" />
           </div>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-800 hover:bg-transparent">
-                <TableHead className="text-slate-400">ชื่อบริการ</TableHead>
-                <TableHead className="text-slate-400">เวลา</TableHead>
-                <TableHead className="text-slate-400">ราคา</TableHead>
-                <TableHead className="text-slate-400">สถานะ</TableHead>
-                <TableHead className="text-slate-400 w-24" />
+              <TableRow className="border-stone-800 hover:bg-transparent">
+                <TableHead className="text-stone-400">ชื่อบริการ</TableHead>
+                <TableHead className="text-stone-400">เวลา</TableHead>
+                <TableHead className="text-stone-400">ราคา</TableHead>
+                <TableHead className="text-stone-400">สถานะ</TableHead>
+                <TableHead className="text-stone-400 w-24" />
               </TableRow>
             </TableHeader>
             <TableBody>
               {services.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-slate-500 py-10">
+                  <TableCell colSpan={5} className="text-center text-stone-500 py-10">
                     ยังไม่มีบริการ — กด เพิ่มบริการ ด้านบน
                   </TableCell>
                 </TableRow>
               ) : (
                 services.map((s) => (
-                  <TableRow key={s.id} className="border-slate-800 hover:bg-slate-800/50">
+                  <TableRow key={s.id} className="border-stone-800 hover:bg-stone-800/50">
                     <TableCell className="text-white font-medium">{s.name}</TableCell>
-                    <TableCell className="text-slate-300">{s.durationMinutes} นาที</TableCell>
-                    <TableCell className="text-slate-300">฿{s.price.toLocaleString()}</TableCell>
+                    <TableCell className="text-stone-300">{s.durationMinutes} นาที</TableCell>
+                    <TableCell className="text-stone-300">฿{s.price.toLocaleString()}</TableCell>
                     <TableCell>
                       <Badge
                         variant={s.isActive ? 'default' : 'secondary'}
-                        className={s.isActive ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-slate-700 text-slate-400'}
+                        className={s.isActive ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-stone-700 text-stone-400'}
                       >
                         {s.isActive ? 'เปิด' : 'ปิด'}
                       </Badge>
@@ -165,7 +165,7 @@ export default function ServicesPage() {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-slate-400 hover:text-white"
+                          className="h-8 w-8 text-stone-400 hover:text-white"
                           onClick={() => openEdit(s)}
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -173,7 +173,7 @@ export default function ServicesPage() {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-slate-400 hover:text-red-400"
+                          className="h-8 w-8 text-stone-400 hover:text-red-400"
                           onClick={() => handleDelete(s.id)}
                           disabled={deleteId === s.id}
                         >
@@ -193,17 +193,17 @@ export default function ServicesPage() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-slate-900 border-slate-800 text-white">
+        <DialogContent className="bg-stone-900 border-stone-800 text-white">
           <DialogHeader>
             <DialogTitle>{editTarget ? 'แก้ไขบริการ' : 'เพิ่มบริการ'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-slate-300">ชื่อบริการ</Label>
+              <Label className="text-stone-300">ชื่อบริการ</Label>
               <Input
                 {...form.register('name')}
                 placeholder="เช่น ตัดผมชาย"
-                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
               {form.formState.errors.name && (
                 <p className="text-xs text-red-400">{form.formState.errors.name.message}</p>
@@ -211,22 +211,22 @@ export default function ServicesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-slate-300">เวลา (นาที)</Label>
+                <Label className="text-stone-300">เวลา (นาที)</Label>
                 <Input
                   {...form.register('durationMinutes', { valueAsNumber: true })}
                   type="number"
-                  className="bg-slate-800 border-slate-700 text-white"
+                  className="bg-stone-800 border-stone-700 text-white"
                 />
                 {form.formState.errors.durationMinutes && (
                   <p className="text-xs text-red-400">{form.formState.errors.durationMinutes.message}</p>
                 )}
               </div>
               <div className="space-y-1.5">
-                <Label className="text-slate-300">ราคา (บาท)</Label>
+                <Label className="text-stone-300">ราคา (บาท)</Label>
                 <Input
                   {...form.register('price', { valueAsNumber: true })}
                   type="number"
-                  className="bg-slate-800 border-slate-700 text-white"
+                  className="bg-stone-800 border-stone-700 text-white"
                 />
                 {form.formState.errors.price && (
                   <p className="text-xs text-red-400">{form.formState.errors.price.message}</p>
@@ -238,15 +238,15 @@ export default function ServicesPage() {
                 type="checkbox"
                 id="isActive"
                 {...form.register('isActive')}
-                className="h-4 w-4 rounded accent-green-500"
+                className="h-4 w-4 rounded accent-amber-500"
               />
-              <Label htmlFor="isActive" className="text-slate-300 cursor-pointer">เปิดให้บริการ</Label>
+              <Label htmlFor="isActive" className="text-stone-300 cursor-pointer">เปิดให้บริการ</Label>
             </div>
             <DialogFooter>
               <Button
                 type="button"
                 variant="ghost"
-                className="text-slate-400"
+                className="text-stone-400"
                 onClick={() => setDialogOpen(false)}
               >
                 ยกเลิก
@@ -254,7 +254,7 @@ export default function ServicesPage() {
               <Button
                 type="submit"
                 disabled={saving}
-                className="bg-green-500 hover:bg-green-600 text-white"
+                className="bg-amber-500 hover:bg-amber-600 text-white"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'บันทึก'}
               </Button>
