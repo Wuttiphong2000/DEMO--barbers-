@@ -2,8 +2,9 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-import { createBooking } from '@/lib/booking'
+import { createBooking, type BookingSummary } from '@/lib/booking'
 import { ok, err } from '@/lib/api-response'
+import { pushMessage, buildBookingConfirmMessage, buildNewBookingOwnerMessage } from '@/lib/line'
 
 const bookingSchema = z.object({
   lineUserId: z.string().min(1),
@@ -29,5 +30,30 @@ export async function POST(request: NextRequest) {
     return err(result.error, status)
   }
 
-  return ok(result.booking, undefined)
+  const { booking } = result
+  const { lineUserId, displayName } = parsed.data
+
+  // fire-and-forget: push failures must not fail the booking
+  void sendNotifications(lineUserId, displayName, booking)
+
+  return ok(booking, undefined)
+}
+
+async function sendNotifications(lineUserId: string, customerName: string, booking: BookingSummary) {
+  const ownerUserId = process.env.LINE_OWNER_USER_ID
+  const notificationData = {
+    queueNumber: booking.queueNumber,
+    timeSlot: booking.timeSlot,
+    date: booking.date,
+    barberName: booking.barberName,
+    serviceName: booking.serviceName,
+    servicePrice: booking.servicePrice,
+  }
+
+  await Promise.allSettled([
+    pushMessage(lineUserId, [buildBookingConfirmMessage(notificationData)]),
+    ownerUserId
+      ? pushMessage(ownerUserId, [buildNewBookingOwnerMessage({ ...notificationData, customerName })])
+      : Promise.resolve(),
+  ])
 }
