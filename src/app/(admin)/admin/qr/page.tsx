@@ -51,6 +51,7 @@ export default function QRPage() {
           ) : (
             <>
               <div className="rounded-xl overflow-hidden bg-white p-3 shadow-xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={qrDataUrl} alt="QR Code จองคิว" className="h-56 w-56" />
               </div>
 

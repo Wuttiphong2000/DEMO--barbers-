@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { ok, err } from '@/lib/api-response'
+import { err } from '@/lib/api-response'
 import { getAuthUser } from '@/lib/auth-guard'
 import { createWalkInBooking } from '@/lib/booking'
 
