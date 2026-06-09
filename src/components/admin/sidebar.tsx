@@ -3,11 +3,13 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/db/supabase'
-import { Scissors, LayoutDashboard, Wrench, Users, Clock, Settings, LogOut, QrCode } from 'lucide-react'
+import { Scissors, LayoutDashboard, Wrench, Users, Clock, Settings, LogOut, QrCode, CalendarDays, UserRound } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/admin/calendar', label: 'ปฏิทิน', icon: CalendarDays },
+  { href: '/admin/customers', label: 'ลูกค้า', icon: UserRound },
   { href: '/admin/services', label: 'บริการ', icon: Wrench },
   { href: '/admin/barbers', label: 'ช่าง', icon: Users },
   { href: '/admin/hours', label: 'เวลาร้าน', icon: Clock },
@@ -33,7 +35,7 @@ export function AdminSidebar() {
         <span className="font-semibold text-white text-sm">Admin Panel</span>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href)
           return (

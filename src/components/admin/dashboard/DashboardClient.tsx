@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, RefreshCw } from 'lucide-react'
+import { supabase } from '@/lib/db/supabase'
 import { StatsCards } from './StatsCards'
 import { QueueCard } from './QueueCard'
 import { WalkInModal } from './WalkInModal'
@@ -27,6 +28,18 @@ export function DashboardClient({
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [showWalkIn, setShowWalkIn] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+
+  // Supabase Realtime — requires Realtime enabled on "bookings" table in Supabase dashboard
+  // (Database → Replication → Supabase Realtime → toggle on for bookings table)
+  useEffect(() => {
+    const channel = supabase
+      .channel('dashboard-bookings')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, () => {
+        router.refresh()
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [router])
 
   const refresh = useCallback(async () => {
     setRefreshing(true)
