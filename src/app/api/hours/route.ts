@@ -15,9 +15,6 @@ const updateDaySchema = z.object({
 })
 
 export async function GET() {
-  const user = await getAuthUser()
-  if (!user) return err('Unauthorized', 401)
-
   const hours = await prisma.businessHour.findMany({
     orderBy: { dayOfWeek: 'asc' },
   })

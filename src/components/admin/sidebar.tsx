@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
-import { Scissors, LayoutDashboard, Wrench, Users, Clock, Settings, LogOut } from 'lucide-react'
+import { supabase } from '@/lib/db/supabase'
+import { Scissors, LayoutDashboard, Wrench, Users, Clock, Settings, LogOut, QrCode } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/admin/barbers', label: 'ช่าง', icon: Users },
   { href: '/admin/hours', label: 'เวลาร้าน', icon: Clock },
   { href: '/admin/settings', label: 'ตั้งค่า', icon: Settings },
+  { href: '/admin/qr', label: 'QR Code', icon: QrCode },
 ]
 
 export function AdminSidebar() {
@@ -19,10 +20,6 @@ export function AdminSidebar() {
   const router = useRouter()
 
   async function handleSignOut() {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
     await supabase.auth.signOut()
     router.push('/login')
   }

@@ -12,13 +12,9 @@ const createSchema = z.object({
 })
 
 export async function GET() {
-  const user = await getAuthUser()
-  if (!user) return err('Unauthorized', 401)
-
   const services = await prisma.service.findMany({
     orderBy: { createdAt: 'asc' },
   })
-
   return ok(services.map((s) => ({ ...s, price: s.price.toNumber() })))
 }
 

@@ -1,0 +1,9 @@
+export const metadata = { title: 'จองคิว' }
+
+export default function LiffLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {children}
+    </div>
+  )
+}

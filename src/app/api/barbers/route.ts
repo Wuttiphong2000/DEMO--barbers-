@@ -10,9 +10,6 @@ const createSchema = z.object({
 })
 
 export async function GET() {
-  const user = await getAuthUser()
-  if (!user) return err('Unauthorized', 401)
-
   const barbers = await prisma.barber.findMany({ orderBy: { createdAt: 'asc' } })
   return ok(barbers)
 }
