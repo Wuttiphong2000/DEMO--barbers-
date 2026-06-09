@@ -1,0 +1,15 @@
+name: Hourly Booking Reminder
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # every hour
+  workflow_dispatch:       # allow manual trigger for testing
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call hourly reminder endpoint
+        run: |
+          curl -f -X GET "${{ secrets.APP_URL }}/api/cron/reminder-hour" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
