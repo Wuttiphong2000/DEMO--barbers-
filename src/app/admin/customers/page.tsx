@@ -14,9 +14,11 @@ export default async function CustomersPage() {
         where: { status: { notIn: ['cancelled', 'no_show'] } },
         include: { service: { select: { name: true, price: true } } },
         orderBy: { date: 'desc' },
+        take: 10,
       },
     },
     orderBy: { createdAt: 'desc' },
+    take: 100,
   })
 
   const customerData = customers.map((c) => {
@@ -32,7 +34,7 @@ export default async function CustomersPage() {
       totalSpent,
       lastVisit: lastBooking?.date?.toISOString().slice(0, 10) ?? null,
       createdAt: c.createdAt.toISOString().slice(0, 10),
-      recentBookings: bookings.slice(0, 10).map((b) => ({
+      recentBookings: bookings.map((b) => ({
         id: b.id,
         queueNumber: b.queueNumber,
         date: b.date.toISOString().slice(0, 10),

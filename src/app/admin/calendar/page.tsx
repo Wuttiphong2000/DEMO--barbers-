@@ -14,9 +14,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
 
   const params = await searchParams
   const now = new Date()
+  const bangkokOffset = 7 * 60
+  const bangkokNow = new Date(now.getTime() + bangkokOffset * 60 * 1000)
 
-  let year = now.getFullYear()
-  let month = now.getMonth() + 1
+  let year = bangkokNow.getUTCFullYear()
+  let month = bangkokNow.getUTCMonth() + 1
 
   if (params.month && /^\d{4}-\d{2}$/.test(params.month)) {
     const [y, m] = params.month.split('-').map(Number)
@@ -74,7 +76,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
     })
   }
 
-  const today = now.toISOString().slice(0, 10)
+  const today = bangkokNow.toISOString().slice(0, 10)
 
   return (
     <CalendarClient

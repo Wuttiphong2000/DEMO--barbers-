@@ -43,17 +43,18 @@ export interface GetAvailableSlotsInput {
 export async function getAvailableSlotsForDate(input: GetAvailableSlotsInput): Promise<string[]> {
   const { barberId, date, serviceId, openTime, closeTime, bufferMinutes } = input
 
-  const service = await prisma.service.findUnique({ where: { id: serviceId } })
+  const [service, takenBookings] = await Promise.all([
+    prisma.service.findUnique({ where: { id: serviceId } }),
+    prisma.booking.findMany({
+      where: {
+        barberId,
+        date: new Date(date),
+        status: { not: 'cancelled' },
+      },
+      select: { timeSlot: true },
+    }),
+  ])
   if (!service) return []
-
-  const takenBookings = await prisma.booking.findMany({
-    where: {
-      barberId,
-      date: new Date(date),
-      status: { not: 'cancelled' },
-    },
-    select: { timeSlot: true },
-  })
 
   const takenSlots = takenBookings.map((b) => b.timeSlot)
 

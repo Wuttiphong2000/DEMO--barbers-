@@ -22,6 +22,23 @@ interface Barber {
   isActive: boolean
 }
 
+interface BusinessHour {
+  dayOfWeek: string
+  isClosed: boolean
+}
+
+interface SpecialDay {
+  date: string
+  isClosed: boolean
+}
+
+interface InitData {
+  services: Service[]
+  barbers: Barber[]
+  businessHours: BusinessHour[]
+  specialDays: SpecialDay[]
+}
+
 interface BookingState {
   step: 1 | 2 | 3 | 4 | 5
   service: Service | null
@@ -62,21 +79,7 @@ function StepDots({ current }: { current: number }) {
 
 // ─── Step 1: Select Service ───────────────────────────────────────────────────
 
-function StepService({ onSelect }: { onSelect: (s: Service) => void }) {
-  const [services, setServices] = useState<Service[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/services')
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success) setServices(json.data.filter((s: Service) => s.isActive))
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) return <LoadingSpinner />
-
+function StepService({ services, onSelect }: { services: Service[]; onSelect: (s: Service) => void }) {
   return (
     <div className="space-y-3">
       <h2 className="text-base font-semibold text-stone-50">เลือกบริการ</h2>
@@ -104,21 +107,7 @@ function StepService({ onSelect }: { onSelect: (s: Service) => void }) {
 
 // ─── Step 2: Select Barber ────────────────────────────────────────────────────
 
-function StepBarber({ onSelect }: { onSelect: (barberId: string | null, name: string) => void }) {
-  const [barbers, setBarbers] = useState<Barber[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/barbers')
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success) setBarbers(json.data.filter((b: Barber) => b.isActive))
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) return <LoadingSpinner />
-
+function StepBarber({ barbers, onSelect }: { barbers: Barber[]; onSelect: (barberId: string | null, name: string) => void }) {
   return (
     <div className="space-y-3">
       <h2 className="text-base font-semibold text-stone-50">เลือกช่าง</h2>
@@ -154,10 +143,11 @@ function StepBarber({ onSelect }: { onSelect: (barberId: string | null, name: st
 
 // ─── Step 3: Date Picker ──────────────────────────────────────────────────────
 
-function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
-  const [openDates, setOpenDates] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(true)
-
+function StepDate({ businessHours, specialDays, onSelect }: {
+  businessHours: BusinessHour[]
+  specialDays: SpecialDay[]
+  onSelect: (date: string) => void
+}) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -170,36 +160,20 @@ function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
     return toLocalDateStr(d)
   })
 
-  useEffect(() => {
-    Promise.all([fetch('/api/hours'), fetch('/api/special-days')]).then(async ([h, s]) => {
-      const [hoursJson, specialJson] = await Promise.all([h.json(), s.json()])
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
-      const businessHours: Array<{ dayOfWeek: string; isClosed: boolean }> = hoursJson.success ? hoursJson.data : []
-      const specialDays: Array<{ date: string; isClosed: boolean }> = specialJson.success ? specialJson.data.map(
-        (sd: { date: string; isClosed: boolean }) => ({ ...sd, date: String(sd.date).slice(0, 10) })
-      ) : []
-
-      const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-
-      const open = new Set<string>()
-      dates.forEach((d) => {
-        const dateObj = new Date(d)
-        const special = specialDays.find((sd) => sd.date === d)
-        if (special !== undefined) {
-          if (!special.isClosed) open.add(d)
-          return
-        }
-        const dayName = dayNames[dateObj.getDay()]
-        const hours = businessHours.find((h) => h.dayOfWeek === dayName)
-        if (hours && !hours.isClosed) open.add(d)
-      })
-
-      setOpenDates(open)
-      setLoading(false)
-    })
-  }, [])  // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (loading) return <LoadingSpinner />
+  const openDates = new Set<string>()
+  dates.forEach((d) => {
+    const dateObj = new Date(d)
+    const special = specialDays.find((sd) => sd.date.slice(0, 10) === d)
+    if (special !== undefined) {
+      if (!special.isClosed) openDates.add(d)
+      return
+    }
+    const dayName = dayNames[dateObj.getDay()]
+    const hours = businessHours.find((h) => h.dayOfWeek === dayName)
+    if (hours && !hours.isClosed) openDates.add(d)
+  })
 
   const thMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']
   const thDays = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
@@ -240,11 +214,13 @@ function StepDate({ onSelect }: { onSelect: (date: string) => void }) {
 
 function StepSlot({
   barberId,
+  barbers,
   date,
   serviceId,
   onSelect,
 }: {
   barberId: string | null
+  barbers: Barber[]
   date: string
   serviceId: string
   onSelect: (slot: string) => void
@@ -254,30 +230,19 @@ function StepSlot({
   const [closed, setClosed] = useState(false)
 
   useEffect(() => {
-    if (!barberId) {
-      fetch('/api/barbers')
-        .then((r) => r.json())
-        .then((json) => {
-          const active = json.data?.filter((b: Barber) => b.isActive) ?? []
-          if (active.length === 0) { setLoading(false); return }
-          return fetchSlots(active[0].id)
-        })
-    } else {
-      fetchSlots(barberId)
-    }
+    const bid = barberId ?? (barbers.length > 0 ? barbers[0].id : null)
+    if (!bid) { setLoading(false); return }
 
-    function fetchSlots(bid: string) {
-      return fetch(`/api/available-slots?barberId=${bid}&date=${date}&serviceId=${serviceId}`)
-        .then((r) => r.json())
-        .then((json) => {
-          if (json.success) {
-            setSlots(json.data.slots)
-            setClosed(json.data.closed)
-          }
-          setLoading(false)
-        })
-    }
-  }, [barberId, date, serviceId])
+    fetch(`/api/available-slots?barberId=${bid}&date=${date}&serviceId=${serviceId}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) {
+          setSlots(json.data.slots)
+          setClosed(json.data.closed)
+        }
+        setLoading(false)
+      })
+  }, [barberId, barbers, date, serviceId])
 
   if (loading) return <LoadingSpinner />
 
@@ -431,6 +396,15 @@ function LoadingSpinner() {
 export default function BookPage() {
   const router = useRouter()
   const { ready, profile } = useLiff()
+  const [initData, setInitData] = useState<InitData | null>(null)
+
+  useEffect(() => {
+    fetch('/api/booking-init')
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) setInitData(json.data)
+      })
+  }, [])
 
   const [state, setState] = useState<BookingState>({
     step: 1,
@@ -441,7 +415,7 @@ export default function BookPage() {
     timeSlot: '',
   })
 
-  if (!ready) {
+  if (!ready || !initData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-stone-950">
         <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
@@ -453,18 +427,21 @@ export default function BookPage() {
     setState((s) => ({ ...s, step: (Math.max(1, s.step - 1)) as BookingState['step'] }))
   }
 
+  const data = initData!
+
   function renderStep() {
     switch (state.step) {
       case 1:
-        return <StepService onSelect={(service) => setState((s) => ({ ...s, service, step: 2 }))} />
+        return <StepService services={data.services} onSelect={(service) => setState((s) => ({ ...s, service, step: 2 }))} />
       case 2:
-        return <StepBarber onSelect={(barberId, barberName) => setState((s) => ({ ...s, barberId, barberName, step: 3 }))} />
+        return <StepBarber barbers={data.barbers} onSelect={(barberId, barberName) => setState((s) => ({ ...s, barberId, barberName, step: 3 }))} />
       case 3:
-        return <StepDate onSelect={(date) => setState((s) => ({ ...s, date, step: 4 }))} />
+        return <StepDate businessHours={data.businessHours} specialDays={data.specialDays} onSelect={(date) => setState((s) => ({ ...s, date, step: 4 }))} />
       case 4:
         return (
           <StepSlot
             barberId={state.barberId}
+            barbers={data.barbers}
             date={state.date}
             serviceId={state.service!.id}
             onSelect={(timeSlot) => setState((s) => ({ ...s, timeSlot, step: 5 }))}
