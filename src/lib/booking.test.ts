@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach } from 'vitest'
 import { prisma } from '@/lib/db/prisma'
-import { createBooking, getAvailableSlotsForDate } from './booking'
+import { createBooking, createWalkInBooking, getAvailableSlotsForDate } from './booking'
 
 // Shared test data IDs
 let serviceId: string
@@ -31,8 +31,9 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await prisma.booking.deleteMany({ where: { notes: 'TEST' } })
+  await prisma.booking.deleteMany({ where: { date: { gte: new Date('2030-01-01') } } })
   await prisma.customer.deleteMany({ where: { lineUserId: { startsWith: 'Utest_' } } })
+  await prisma.customer.deleteMany({ where: { lineUserId: { startsWith: 'walkin_' } } })
   await prisma.service.deleteMany({ where: { name: 'TEST_SERVICE' } })
   await prisma.barber.deleteMany({ where: { name: 'TEST_BARBER' } })
 })
@@ -304,5 +305,159 @@ describe('getAvailableSlotsForDate', () => {
 
     // Assert
     expect(slots).toHaveLength(0)
+  })
+
+  test('returns empty array when service is not found', async () => {
+    const slots = await getAvailableSlotsForDate({
+      barberId,
+      date: '2030-03-01',
+      serviceId: 'nonexistent-id',
+      openTime: '09:00',
+      closeTime: '18:00',
+      bufferMinutes: 0,
+    })
+
+    expect(slots).toHaveLength(0)
+  })
+})
+
+describe('createBooking — edge cases', () => {
+  test('returns barber_not_found for nonexistent barberId', async () => {
+    const result = await createBooking({
+      lineUserId: 'Utest_edge_001',
+      displayName: 'Test',
+      serviceId,
+      barberId: 'nonexistent-barber',
+      date: '2030-04-01',
+      timeSlot: '10:00',
+      notes: 'TEST',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error).toBe('barber_not_found')
+  })
+
+  test('returns service_not_found for nonexistent serviceId when barberId is null', async () => {
+    const result = await createBooking({
+      lineUserId: 'Utest_edge_002',
+      displayName: 'Test',
+      serviceId: 'nonexistent-service',
+      barberId: null,
+      date: '2030-04-02',
+      timeSlot: '10:00',
+      notes: 'TEST',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error).toBe('service_not_found')
+  })
+})
+
+describe('createWalkInBooking', () => {
+  test('creates walk-in booking successfully with auto-assigned barber', async () => {
+    const date = '2030-05-01'
+
+    const result = await createWalkInBooking({
+      customerName: 'Walk-in Test',
+      serviceId,
+      barberId: null,
+      date,
+      timeSlot: '09:00',
+    })
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+
+    expect(result.booking.queueNumber).toMatch(/^Q\d{3}$/)
+    expect(result.booking.barberId).toBeDefined()
+  })
+
+  test('creates walk-in with specific barber', async () => {
+    const date = '2030-05-02'
+
+    const result = await createWalkInBooking({
+      serviceId,
+      barberId,
+      date,
+      timeSlot: '10:00',
+    })
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+
+    expect(result.booking.barberId).toBe(barberId)
+  })
+
+  test('returns service_not_found when service does not exist', async () => {
+    const result = await createWalkInBooking({
+      serviceId: 'nonexistent-service',
+      barberId: null,
+      date: '2030-05-03',
+      timeSlot: '11:00',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error).toBe('service_not_found')
+  })
+
+  test('returns barber_not_found when specified barber does not exist', async () => {
+    const result = await createWalkInBooking({
+      serviceId,
+      barberId: 'nonexistent-barber',
+      date: '2030-05-04',
+      timeSlot: '11:00',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error).toBe('barber_not_found')
+  })
+
+  test('returns no_barber_available when all barbers are inactive', async () => {
+    const activeBarbers = await prisma.barber.findMany({ where: { isActive: true } })
+    await prisma.barber.updateMany({ where: { isActive: true }, data: { isActive: false } })
+
+    try {
+      const result = await createWalkInBooking({
+        serviceId,
+        barberId: null,
+        date: '2030-05-05',
+        timeSlot: '09:00',
+      })
+
+      expect(result.success).toBe(false)
+      if (result.success) return
+      expect(result.error).toBe('no_barber_available')
+    } finally {
+      await prisma.barber.updateMany({
+        where: { id: { in: activeBarbers.map((b) => b.id) } },
+        data: { isActive: true },
+      })
+    }
+  })
+
+  test('returns slot_taken on double-booking same slot', async () => {
+    const date = '2030-05-06'
+
+    await createWalkInBooking({
+      serviceId,
+      barberId,
+      date,
+      timeSlot: '14:00',
+    })
+
+    const result = await createWalkInBooking({
+      serviceId,
+      barberId,
+      date,
+      timeSlot: '14:00',
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(result.error).toBe('slot_taken')
   })
 })

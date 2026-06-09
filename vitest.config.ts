@@ -10,6 +10,11 @@ export default defineConfig(({ mode }) => {
       globals: true,
       include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
       env,
+      coverage: {
+        provider: 'v8',
+        include: ['src/lib/**/*.ts'],
+        exclude: ['src/lib/**/*.test.ts', 'src/lib/db/**'],
+      },
     },
   }
 })
