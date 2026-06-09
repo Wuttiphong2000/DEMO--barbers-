@@ -13,10 +13,16 @@ export default async function AdminPage() {
   if (!user) redirect('/login')
 
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const bangkokOffset = 7 * 60 * 60 * 1000
+  const bangkokNow = new Date(now.getTime() + bangkokOffset)
+
+  // Bangkok midnight expressed as UTC timestamp for DB queries
+  const today = new Date(
+    Date.UTC(bangkokNow.getUTCFullYear(), bangkokNow.getUTCMonth(), bangkokNow.getUTCDate()) - bangkokOffset
+  )
   const tomorrow = new Date(today.getTime() + 86_400_000)
 
-  const currentTimeMinutes = now.getHours() * 60 + now.getMinutes()
+  const currentTimeMinutes = bangkokNow.getUTCHours() * 60 + bangkokNow.getUTCMinutes()
 
   const [rawBookings, services, barbers, newCustomers, gracePeriodRow] = await Promise.all([
     prisma.booking.findMany({
@@ -105,7 +111,7 @@ export default async function AdminPage() {
 
   const barberOptions: BarberOption[] = barbers
 
-  const dateLabel = `${TH_DAYS[now.getDay()]} ${now.getDate()} ${TH_MONTHS[now.getMonth()]} ${now.getFullYear() + 543}`
+  const dateLabel = `${TH_DAYS[bangkokNow.getUTCDay()]} ${bangkokNow.getUTCDate()} ${TH_MONTHS[bangkokNow.getUTCMonth()]} ${bangkokNow.getUTCFullYear() + 543}`
 
   return (
     <DashboardClient
