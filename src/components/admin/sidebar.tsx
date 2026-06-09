@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   { href: '/admin/qr', label: 'QR Code', icon: QrCode },
 ]
 
-export function AdminSidebar() {
+export function AdminSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -42,6 +42,7 @@ export function AdminSidebar() {
             <Link
               key={href}
               href={href}
+              onClick={onNavigate}
               className={cn(
                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
                 isActive
