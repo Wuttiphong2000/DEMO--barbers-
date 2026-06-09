@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { type NextRequest, NextResponse } from 'next/server'
-import { validateSignature, getUserProfile, replyMessage } from '@/lib/line'
+import { validateSignature, getUserProfile, replyMessage, pushMessage } from '@/lib/line'
 import { prisma } from '@/lib/db/prisma'
 
 interface LineSource {
@@ -28,6 +28,8 @@ interface LineWebhookBody {
   destination: string
   events: LineEvent[]
 }
+
+const LATE_KEYWORDS = ['แจ้งมาสาย', 'มาสาย', 'มาช้า', 'แจ้งช้า', 'late']
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const rawBody = await request.text()
@@ -85,10 +87,63 @@ async function handleMessage(event: LineMessageEvent): Promise<void> {
   const userId = event.source.userId
   if (!userId) return
 
+  const text = event.message.type === 'text' ? (event.message.text ?? '') : ''
+  const isLateReport = LATE_KEYWORDS.some((kw) => text.toLowerCase().includes(kw))
+
+  if (isLateReport) {
+    await handleLateReport(userId, event.replyToken)
+    return
+  }
+
   const liffId = process.env.NEXT_PUBLIC_LIFF_ID
   const replyText = liffId
     ? `สวัสดีครับ! 💈\nกดจองคิวได้เลยที่นี่:\nhttps://liff.line.me/${liffId}`
     : 'สวัสดีครับ! กรุณาติดต่อร้านเพื่อจองคิว'
 
   await replyMessage(event.replyToken, [{ type: 'text', text: replyText }])
+}
+
+async function handleLateReport(userId: string, replyToken: string): Promise<void> {
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const tomorrow = new Date(today.getTime() + 86_400_000)
+
+  const booking = await prisma.booking.findFirst({
+    where: {
+      customer: { lineUserId: userId },
+      date: { gte: today, lt: tomorrow },
+      status: 'pending_arrival',
+    },
+    include: {
+      service: { select: { name: true } },
+      barber: { select: { name: true } },
+    },
+    orderBy: { timeSlot: 'asc' },
+  })
+
+  if (!booking) {
+    await replyMessage(replyToken, [{
+      type: 'text',
+      text: 'ขออภัยครับ ไม่พบการจองวันนี้ของคุณ\nกรุณาติดต่อร้านโดยตรงครับ',
+    }])
+    return
+  }
+
+  await prisma.booking.update({
+    where: { id: booking.id },
+    data: { notes: 'LATE_REPORTED' },
+  })
+
+  await replyMessage(replyToken, [{
+    type: 'text',
+    text: `✅ รับทราบแล้วครับ!\nคิว ${booking.queueNumber} · ${booking.timeSlot} น.\nเจ้าของร้านจะรับทราบว่าคุณกำลังเดินทางมาอยู่ครับ 🙏`,
+  }])
+
+  const ownerUserId = process.env.LINE_OWNER_USER_ID
+  if (ownerUserId) {
+    void pushMessage(ownerUserId, [{
+      type: 'text',
+      text: `⚠️ ลูกค้าแจ้งมาสาย\nคิว ${booking.queueNumber} · ${booking.timeSlot} น.\nบริการ: ${booking.service.name} (ช่าง${booking.barber.name})`,
+    }]).catch(() => {/* swallow */})
+  }
 }

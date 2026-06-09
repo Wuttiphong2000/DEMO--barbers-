@@ -35,7 +35,13 @@ export function QueueCard({ booking, actionLoading, onAction }: QueueCardProps) 
               {source.icon}
               {source.label}
             </span>
-            {booking.isLate && (
+            {booking.notes === 'LATE_REPORTED' && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-orange-700/50 bg-orange-950 px-2 py-0.5 text-xs font-medium text-orange-400">
+                <AlertTriangle className="h-3 w-3" />
+                แจ้งมาสาย
+              </span>
+            )}
+            {booking.isLate && booking.notes !== 'LATE_REPORTED' && (
               <span className="inline-flex items-center gap-1 rounded-full border border-amber-700/50 bg-amber-950 px-2 py-0.5 text-xs font-medium text-amber-400 animate-pulse">
                 <AlertTriangle className="h-3 w-3" />
                 มาช้า {booking.lateMinutes} นาที
