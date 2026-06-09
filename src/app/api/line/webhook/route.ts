@@ -105,7 +105,9 @@ async function handleMessage(event: LineMessageEvent): Promise<void> {
 
 async function handleLateReport(userId: string, replyToken: string): Promise<void> {
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const bangkokOffset = 7 * 60 * 60 * 1000
+  const bangkokNow = new Date(now.getTime() + bangkokOffset)
+  const today = new Date(Date.UTC(bangkokNow.getUTCFullYear(), bangkokNow.getUTCMonth(), bangkokNow.getUTCDate()) - bangkokOffset)
   const tomorrow = new Date(today.getTime() + 86_400_000)
 
   const booking = await prisma.booking.findFirst({

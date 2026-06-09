@@ -13,7 +13,9 @@ export async function GET(request: NextRequest) {
   }
 
   const now = new Date()
-  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+  const bangkokOffset = 7 * 60 * 60 * 1000
+  const bangkokNow = new Date(now.getTime() + bangkokOffset)
+  const tomorrow = new Date(Date.UTC(bangkokNow.getUTCFullYear(), bangkokNow.getUTCMonth(), bangkokNow.getUTCDate() + 1) - bangkokOffset)
   const dayAfter = new Date(tomorrow.getTime() + 86_400_000)
 
   const bookings = await prisma.booking.findMany({
@@ -31,9 +33,10 @@ export async function GET(request: NextRequest) {
   const shopNameRow = await prisma.setting.findUnique({ where: { key: 'shop_name' } })
   const shopName = shopNameRow?.value ?? 'ร้านตัดผม'
 
-  const tomorrowStr = tomorrow.toLocaleDateString('th-TH', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  })
+  const bangkokTomorrow = new Date(bangkokNow.getTime() + 86_400_000)
+  const TH_DAYS_LONG = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์']
+  const TH_MONTHS_LONG = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+  const tomorrowStr = `วัน${TH_DAYS_LONG[bangkokTomorrow.getUTCDay()]}ที่ ${bangkokTomorrow.getUTCDate()} ${TH_MONTHS_LONG[bangkokTomorrow.getUTCMonth()]}`
 
   let sent = 0
   const results = await Promise.allSettled(

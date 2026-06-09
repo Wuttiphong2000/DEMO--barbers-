@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
     return err(parsed.error.issues[0].message, 400)
   }
 
-  const todayStr = new Date().toISOString().slice(0, 10)
+  const bangkokNow = new Date(Date.now() + 7 * 60 * 60 * 1000)
+  const todayStr = bangkokNow.toISOString().slice(0, 10)
   if (parsed.data.date < todayStr) {
     return err('cannot_book_past_date', 400)
   }
