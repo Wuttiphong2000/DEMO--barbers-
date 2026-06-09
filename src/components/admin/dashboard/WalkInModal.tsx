@@ -60,7 +60,7 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div data-testid="walkin-modal" className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
@@ -91,6 +91,7 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
                 ชื่อลูกค้า <span className="text-slate-600">(ไม่บังคับ)</span>
               </label>
               <input
+                name="customerName"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="นาย..."
@@ -104,6 +105,7 @@ export function WalkInModal({ services, barbers, onClose, onSuccess }: WalkInMod
                 บริการ <span className="text-red-400">*</span>
               </label>
               <select
+                name="serviceId"
                 value={serviceId}
                 onChange={(e) => setServiceId(e.target.value)}
                 className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-none"

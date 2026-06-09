@@ -89,6 +89,7 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
         </div>
         <div className="flex items-center gap-2">
           <button
+            data-testid="cal-prev"
             onClick={() => navigate(-1)}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
           >
@@ -101,6 +102,7 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
             วันนี้
           </button>
           <button
+            data-testid="cal-next"
             onClick={() => navigate(1)}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
           >
@@ -114,7 +116,7 @@ export function CalendarClient({ year, month, days, today }: CalendarClientProps
         {/* Day headers */}
         <div className="grid grid-cols-7 border-b border-slate-800">
           {TH_DAYS_SHORT.map((d) => (
-            <div key={d} className="py-2 text-center text-xs font-medium text-slate-500">{d}</div>
+            <div key={d} data-testid="cal-day-header" className="py-2 text-center text-xs font-medium text-slate-500">{d}</div>
           ))}
         </div>
 

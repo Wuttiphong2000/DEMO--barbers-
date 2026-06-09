@@ -54,7 +54,7 @@ function StatCard({
   color: keyof typeof COLOR_MAP
 }) {
   return (
-    <div className={`rounded-xl border p-4 ${COLOR_MAP[color]}`}>
+    <div data-testid="stat-card" className={`rounded-xl border p-4 ${COLOR_MAP[color]}`}>
       <p className="text-xs text-slate-400 mb-1">{label}</p>
       <p className="font-mono text-2xl font-bold text-slate-50">{value}</p>
       {sub && <p className="mt-1 text-xs text-slate-500 truncate">{sub}</p>}

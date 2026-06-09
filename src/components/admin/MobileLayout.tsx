@@ -30,6 +30,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile header */}
         <div className="flex h-12 items-center gap-3 border-b border-slate-800 bg-slate-900 px-4 md:hidden">
           <button
+            data-testid="mobile-menu-btn"
             onClick={() => setSidebarOpen(true)}
             className="text-slate-400 hover:text-white transition-colors"
           >

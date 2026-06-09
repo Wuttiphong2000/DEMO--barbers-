@@ -93,7 +93,7 @@ function CustomerRow({
   onToggle: () => void
 }) {
   return (
-    <div>
+    <div data-testid="customer-row">
       <button
         onClick={onToggle}
         className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-slate-800/50 transition-colors"
